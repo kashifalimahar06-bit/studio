@@ -54,10 +54,10 @@ export function AdminSidebar() {
                     className: "font-body",
                   }}
                 >
-                  <>
+                  <div>
                     <item.icon />
                     <span>{item.label}</span>
-                  </>
+                  </div>
                 </SidebarMenuButton>
               </Link>
             </SidebarMenuItem>

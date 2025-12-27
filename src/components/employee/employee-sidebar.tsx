@@ -54,10 +54,10 @@ export function EmployeeSidebar() {
                         className: "font-body",
                         }}
                     >
-                        <>
+                        <div>
                             <item.icon />
                             <span>{item.label}</span>
-                        </>
+                        </div>
                     </SidebarMenuButton>
               </Link>
             </SidebarMenuItem>
