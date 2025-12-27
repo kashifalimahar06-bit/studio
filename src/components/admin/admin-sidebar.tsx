@@ -45,18 +45,21 @@ export function AdminSidebar() {
         <SidebarMenu>
           {menuItems.map((item) => (
             <SidebarMenuItem key={item.href}>
-              <SidebarMenuButton
-                as={Link}
-                href={item.href}
-                isActive={pathname === item.href}
-                tooltip={{
-                  children: item.label,
-                  className: "font-body",
-                }}
-              >
-                <item.icon />
-                <span>{item.label}</span>
-              </SidebarMenuButton>
+              <Link href={item.href} passHref>
+                <SidebarMenuButton
+                  isActive={pathname === item.href}
+                  asChild
+                  tooltip={{
+                    children: item.label,
+                    className: "font-body",
+                  }}
+                >
+                  <>
+                    <item.icon />
+                    <span>{item.label}</span>
+                  </>
+                </SidebarMenuButton>
+              </Link>
             </SidebarMenuItem>
           ))}
         </SidebarMenu>
