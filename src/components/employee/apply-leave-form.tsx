@@ -73,7 +73,7 @@ export function ApplyLeaveForm() {
             title: "Request Sent to WhatsApp",
             description: result.message,
         });
-        form.reset();
+        form.reset({ reason: '' });
 
     } catch (error) {
         console.error("Error sending leave request:", error);
@@ -147,8 +147,8 @@ export function ApplyLeaveForm() {
                     initialFocus
                     mode="range"
                     defaultMonth={field.value?.from}
-                    selected={{from: field.value?.from, to: field.value?.to}}
-                    onSelect={(range: DateRange | undefined) => field.onChange(range)}
+                    selected={field.value}
+                    onSelect={field.onChange}
                     numberOfMonths={2}
                   />
                 </PopoverContent>
