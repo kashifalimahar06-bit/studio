@@ -18,8 +18,8 @@ const ProcessManagementResponseInputSchema = z.object({
 export type ProcessManagementResponseInput = z.infer<typeof ProcessManagementResponseInputSchema>;
 
 const ProcessManagementResponseOutputSchema = z.object({
-  approved: z.boolean().describe('Whether the leave request was approved or not.'),
-  remark: z.string().describe('Any remarks or comments provided by the manager.'),
+  approved: z.boolean().describe('Whether the leave request was approved or not. This should be a simple true or false. Infer the result from the manager\'s message.'),
+  remark: z.string().describe('Any remarks or comments provided by the manager. Extract this from the message. If no remarks were provided, leave it empty.'),
 });
 export type ProcessManagementResponseOutput = z.infer<typeof ProcessManagementResponseOutputSchema>;
 
@@ -33,16 +33,19 @@ const processManagementResponsePrompt = ai.definePrompt({
   name: 'processManagementResponsePrompt',
   input: {schema: ProcessManagementResponseInputSchema},
   output: {schema: ProcessManagementResponseOutputSchema},
-  prompt: `You are an AI assistant tasked with processing management responses to leave requests.
+  prompt: `You are an AI assistant for a leave management system. Your task is to analyze a WhatsApp message from a manager and determine if a leave request is approved or rejected.
 
-  Analyze the following message to determine if the leave request was approved or rejected, and extract any remarks provided.
-  Message: {{{message}}}
+Analyze the following message, which is a reply to a leave request with ID '{{{leaveId}}}':
+Manager's Message: "{{{message}}}"
 
-  Respond in the following JSON format:
-  {
-    "approved": true/false, // true if approved, false if rejected
-    "remark": "Any remarks or comments provided by the manager. If no remarks were provided, leave empty."
-  }`,
+Based on the message, determine the leave status. The 'approved' field must be either true (for approved) or false (for rejected). Also, extract any additional comments from the manager as a 'remark'.
+
+Examples:
+- "Yes, approved. Let me know if they need anything." -> { "approved": true, "remark": "Let me know if they need anything." }
+- "No, this is not a good time." -> { "approved": false, "remark": "This is not a good time." }
+- "ok" -> { "approved": true, "remark": "" }
+- "reject" -> { "approved": false, "remark": "" }
+`,
 });
 
 const processManagementResponseFlow = ai.defineFlow(

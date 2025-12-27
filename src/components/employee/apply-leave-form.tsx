@@ -15,6 +15,9 @@ import { CalendarIcon, Loader2 } from "lucide-react";
 import { format } from "date-fns";
 import { DateRange } from "react-day-picker";
 import { useToast } from "@/hooks/use-toast";
+import { runFlow } from '@genkit-ai/next/client';
+import { sendLeaveRequest, SendLeaveRequestInput } from '@/ai/flows/send-leave-request-flow';
+import { useAuth } from "@/hooks/use-auth";
 
 const formSchema = z.object({
   leaveType: z.enum(leaveTypes, { required_error: "Please select a leave type." }),
@@ -29,6 +32,7 @@ type FormValues = z.infer<typeof formSchema>;
 
 export function ApplyLeaveForm() {
   const { toast } = useToast();
+  const { user } = useAuth();
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -39,14 +43,46 @@ export function ApplyLeaveForm() {
   const { isSubmitting } = form.formState;
 
   const onSubmit = async (values: FormValues) => {
-    // In a real app, you'd submit this to Firestore.
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    console.log(values);
+    if (!user) {
+        toast({
+            variant: "destructive",
+            title: "Authentication Error",
+            description: "You must be logged in to apply for leave."
+        });
+        return;
+    }
+
     toast({
-        title: "Leave Request Submitted",
-        description: "Your request has been sent to management for approval."
+        title: "Submitting Request...",
+        description: "Forwarding your leave request to management."
     });
-    form.reset();
+
+    try {
+        const input: SendLeaveRequestInput = {
+            employeeName: user.name || 'Employee',
+            employeeId: user.uid,
+            leaveType: values.leaveType,
+            startDate: format(values.dateRange.from, 'yyyy-MM-dd'),
+            endDate: format(values.dateRange.to, 'yyyy-MM-dd'),
+            reason: values.reason,
+        };
+
+        const result = await runFlow(sendLeaveRequest, input);
+
+        toast({
+            title: "Request Sent to WhatsApp",
+            description: result.message,
+        });
+        form.reset();
+
+    } catch (error) {
+        console.error("Error sending leave request:", error);
+        toast({
+            variant: "destructive",
+            title: "Submission Failed",
+            description: "Could not send the leave request. Please try again."
+        });
+    }
   };
 
   return (
