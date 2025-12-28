@@ -1,15 +1,14 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { LoginForm } from "@/components/login-form";
-import { Leaf } from "lucide-react";
+import { Logo } from "@/components/logo";
 
 export default function LoginPage() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-4">
       <div className="w-full max-w-md">
         <div className="flex justify-center items-center mb-6">
-          <Leaf className="h-8 w-8 text-primary" />
-          <h1 className="ml-2 text-2xl font-headline font-bold">Jeejal Amaan Leaves</h1>
+          <Logo />
         </div>
         <Card className="shadow-lg">
           <CardHeader>
@@ -33,6 +32,9 @@ export default function LoginPage() {
             </Tabs>
           </CardContent>
         </Card>
+        <p className="text-center text-sm text-muted-foreground mt-4">
+          Powered by Jeejal Amaan Public School
+        </p>
       </div>
     </main>
   );

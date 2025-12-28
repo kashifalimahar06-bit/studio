@@ -13,8 +13,9 @@ import {
 } from '@/components/ui/sidebar';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { LayoutDashboard, Send, History, LogOut, Leaf } from 'lucide-react';
+import { LayoutDashboard, Send, History, LogOut } from 'lucide-react';
 import { useAuth } from '@/hooks/use-auth';
+import { Logo } from '../logo';
 
 const menuItems = [
   { href: '/employee/dashboard', label: 'Dashboard', icon: LayoutDashboard },
@@ -30,15 +31,9 @@ export function EmployeeSidebar() {
     <Sidebar>
       <SidebarHeader>
         <div className="flex items-center gap-2">
-          <Button variant="ghost" size="icon" asChild>
-            <Link href="/employee/dashboard">
-              <Leaf className="text-primary" />
-            </Link>
-          </Button>
-          <div className="flex flex-col">
-            <h2 className="text-base font-semibold">Jeejal Amaan</h2>
-            <p className="text-xs text-muted-foreground">Employee Portal</p>
-          </div>
+          <Link href="/employee/dashboard" className="flex items-center gap-2">
+            <Logo className="w-24" />
+          </Link>
         </div>
       </SidebarHeader>
       <SidebarContent>
